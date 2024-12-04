@@ -1,15 +1,14 @@
 import { Router } from 'express';
-import { authRequired } from '../middleware/authMiddleware';
-const { getReservas, createReservas, updateReservas, deleteReservas } = require('../controllers/reservaController.js');
+import { getReservas, createReservas, updateReservas, deleteReservas } from '../controllers/reservaController.js';  
 
 const router = Router();
 
-router.get('/reservas', authRequired, getReservas);
+router.get('/reservas', getReservas);
 
-router.post('/reservas', authRequired, createReservas);
+router.post('/reservas', createReservas);
 
-router.put('/reservas/:id', authRequired, updateReservas);
+router.put('/reservas/:id', updateReservas);
 
-router.delete('/reservas/:id', authRequired, deleteReservas);
+router.delete('/reservas/:id', deleteReservas);
 
 export default router;

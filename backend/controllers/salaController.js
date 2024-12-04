@@ -1,76 +1,65 @@
 import Sala from '../models/sala.js';
 
+// Controlador para obtener todas las salas
 export const getSalas = async (req, res) => {
-    try {
-        const salas = await Sala.find(); // Obtener todas las salas
-        res.status(200).json(salas);
-    } catch (error) {
-        res.status(500).json({ message: 'Error al obtener las salas.', error: error.message });
-    }
+  try {
+    const salas = await Sala.find();
+    res.json(salas);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-// Crear una nueva sala
+// Controlador para crear una sala
 export const createSala = async (req, res) => {
-    try {
-        const { nombre, capacidad, estado, ubicacion } = req.body;
-
-        
-        if (!nombre || !capacidad || !ubicacion) {
-            return res.status(400).json({ message: 'Los campos nombre, capacidad y ubicación son obligatorios.' });
-        }
-
-        // Crear una nueva sala
-        const nuevaSala = new Sala({ nombre, capacidad, estado, ubicacion });
-        await nuevaSala.save();
-
-        res.status(201).json({ message: 'Sala creada exitosamente.', sala: nuevaSala });
-    } catch (error) {
-        if (error.code === 11000) { 
-            return res.status(400).json({ message: 'Ya existe una sala con ese nombre.' });
-        }
-        res.status(500).json({ message: 'Error al crear la sala.', error: error.message });
-    }
+  const { nombre, capacidad, ubicacion } = req.body;
+  try {
+    const nuevaSala = new Sala({ nombre, capacidad, ubicacion });
+    await nuevaSala.save();
+    res.status(201).json({
+      message: `Sala "${nuevaSala.nombre}" creada exitosamente.`,
+      sala: nuevaSala,
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
 
-// Actualizar una sala
+// Controlador para actualizar una sala
 export const updateSala = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { nombre, capacidad, estado, ubicacion } = req.body;
-
-        // Buscar y actualizar la sala
-        const salaActualizada = await Sala.findByIdAndUpdate(
-            id,
-            { nombre, capacidad, estado, ubicacion },
-            { new: true, runValidators: true }
-        );
-
-        if (!salaActualizada) {
-            return res.status(404).json({ message: 'Sala no encontrada.' });
-        }
-
-        res.status(200).json({ message: 'Sala actualizada exitosamente.', sala: salaActualizada });
-    } catch (error) {
-        if (error.code === 11000) { 
-            return res.status(400).json({ message: 'Ya existe una sala con ese nombre.' });
-        }
-        res.status(500).json({ message: 'Error al actualizar la sala.', error: error.message });
+  const { id } = req.params;
+  const { nombre, capacidad, ubicacion, estado } = req.body;
+  try {
+    const salaActualizada = await Sala.findByIdAndUpdate(
+      id,
+      { nombre, capacidad, ubicacion, estado },
+      { new: true } // Devuelve la sala actualizada
+    );
+    if (!salaActualizada) {
+      return res.status(404).json({ message: 'Sala no encontrada.' });
     }
+    res.json({
+      message: `Sala "${salaActualizada.nombre}" actualizada exitosamente.`,
+      sala: salaActualizada,
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
 
-// Eliminar una sala
+// Controlador para eliminar una sala
 export const deleteSala = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        const salaEliminada = await Sala.findByIdAndDelete(id);
-
-        if (!salaEliminada) {
-            return res.status(404).json({ message: 'Sala no encontrada.' });
-        }
-
-        res.status(200).json({ message: 'Sala eliminada exitosamente.' });
-    } catch (error) {
-        res.status(500).json({ message: 'Error al eliminar la sala.', error: error.message });
+  const { id } = req.params;
+  try {
+    const salaEliminada = await Sala.findByIdAndDelete(id);
+    if (!salaEliminada) {
+      return res.status(404).json({ message: 'Sala no encontrada.' });
     }
+    res.json({
+      message: `Sala "${salaEliminada.nombre}" eliminada exitosamente.`,
+      sala: salaEliminada,
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };

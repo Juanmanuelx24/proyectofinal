@@ -17,12 +17,21 @@ export function createAccesToken(payload){
 }
 
 export const authRequired = (req, res, next) => {
-    const {token} = req.cookies;
-    if(!token) return res.status(401).json({message:'El token no esta autorizado.'});
-    jwt.verify(token, TOKENSECRET,(err,user) => {
-        if(err) return res.status(403).json({message: 'Token invalido.'});
-        req.user = user;
+    try {
+      const { token } = req.cookies;
+      if (!token) {
+        return res.status(401).json({ message: 'El token no está autorizado.' });
+      }
 
+      jwt.verify(token, TOKENSECRET, (err, user) => {
+        if (err) {
+          return res.status(403).json({ message: 'Token inválido.' });
+        }
+        req.user = user;
         next();
-    })
-}
+      });
+    } catch (error) {
+      return res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  };
+  

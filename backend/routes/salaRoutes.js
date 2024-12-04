@@ -1,17 +1,14 @@
-import {Router} from 'express';
-import { authRequired } from '../middleware/authMiddleware';
-const {getSalas, createSala, updateSala, deleteSala} = require('../controllers/salaController.js');
+import { Router } from 'express';
+import { getSalas, createSala, updateSala, deleteSala } from '../controllers/salaController.js';
 
 const router = Router();
 
+router.get('/sala', getSalas);
 
-router.get('/sala', authRequired, getSalas);
+router.post('/sala', createSala);
 
-router.post('/sala', authRequired, createSala);
+router.put('/sala/:id', updateSala);
 
-router.put('/sala/:id', authRequired, updateSala);
+router.delete('/sala/:id', deleteSala);
 
-router.delete('/sala/:id', authRequired, deleteSala);
-
-
-export default router
+export default router;
