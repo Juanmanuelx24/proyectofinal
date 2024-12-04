@@ -14,7 +14,7 @@ export const createSala = async (req, res) => {
     try {
         const { nombre, capacidad, estado, ubicacion } = req.body;
 
-        // Validar los campos requeridos
+        
         if (!nombre || !capacidad || !ubicacion) {
             return res.status(400).json({ message: 'Los campos nombre, capacidad y ubicación son obligatorios.' });
         }

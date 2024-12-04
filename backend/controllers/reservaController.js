@@ -19,7 +19,7 @@ export const createReservas = async (req, res) => {
     try {
         const { salaId, usuarioId, fechaInicio, fechaFin, estado } = req.body;
 
-        // Validar campos requeridos
+        
         if (!salaId || !usuarioId || !fechaInicio || !fechaFin) {
             return res.status(400).json({ message: 'Los campos son obligatorios.' });
         }
