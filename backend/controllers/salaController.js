@@ -1,6 +1,5 @@
 import Sala from '../models/sala.js';
 
-// Controlador para obtener todas las salas
 export const getSalas = async (req, res) => {
   try {
     const salas = await Sala.find();
@@ -10,7 +9,6 @@ export const getSalas = async (req, res) => {
   }
 };
 
-// Controlador para crear una sala
 export const createSala = async (req, res) => {
   const { nombre, capacidad, ubicacion } = req.body;
   try {
@@ -25,7 +23,6 @@ export const createSala = async (req, res) => {
   }
 };
 
-// Controlador para actualizar una sala
 export const updateSala = async (req, res) => {
   const { id } = req.params;
   const { nombre, capacidad, ubicacion, estado } = req.body;
@@ -33,7 +30,7 @@ export const updateSala = async (req, res) => {
     const salaActualizada = await Sala.findByIdAndUpdate(
       id,
       { nombre, capacidad, ubicacion, estado },
-      { new: true } // Devuelve la sala actualizada
+      { new: true } 
     );
     if (!salaActualizada) {
       return res.status(404).json({ message: 'Sala no encontrada.' });
@@ -47,7 +44,6 @@ export const updateSala = async (req, res) => {
   }
 };
 
-// Controlador para eliminar una sala
 export const deleteSala = async (req, res) => {
   const { id } = req.params;
   try {

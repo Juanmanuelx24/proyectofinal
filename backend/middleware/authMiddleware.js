@@ -34,4 +34,24 @@ export const authRequired = (req, res, next) => {
       return res.status(500).json({ message: 'Error interno del servidor.' });
     }
   };
+  export const isAdmin = (req, res, next) => {
+    const token = req.cookies.token || req.headers['authorization']?.split(' ')[1];
+    if (!token) {
+      return res.status(403).json({ message: 'Acceso denegado. No se encontró token.' });
+    }
+  
+    try {
+    
+      const decoded = jwt.verify(token, process.env.TOKENSECRET);
+      req.user = decoded; 
+  
+      if (req.user.rol !== 'Admin') {
+        return res.status(403).json({ message: 'Acceso denegado. Solo los administradores pueden acceder a esta ruta.' });
+      }
+  
+      next(); 
+    } catch (error) {
+      res.status(401).json({ message: 'Token inválido o expirado.' });
+    }
+  };
   

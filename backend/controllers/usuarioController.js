@@ -1,14 +1,20 @@
 import User from '../models/Usuario.js';
 import { createAccesToken } from '../middleware/authMiddleware.js';
 
+
+const ROL_TOKEN= process.env.ROL_TOKEN
+
+
 export const register = async (req, res) => {
   const { nombre, correo, contraseña, rol } = req.body;
+
   try {
+    const adminRole = rol === ROL_TOKEN ? 'Admin' : 'Usuario';
     const newUser = new User({
       nombre,
       correo,
-      contraseña, 
-      rol
+      contraseña,
+      rol: adminRole,  
     });
 
     const userSave = await newUser.save();
@@ -22,10 +28,10 @@ export const register = async (req, res) => {
         id: userSave._id,
         nombre: userSave.nombre,
         correo: userSave.correo,
-        rol: userSave.rol,
+        rol: userSave.rol,  // Mostrar el rol del usuario
         createdAt: userSave.createdAt,
-        updatedAt: userSave.updatedAt
-      }
+        updatedAt: userSave.updatedAt,
+      },
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -43,28 +49,29 @@ export const login = async (req, res) => {
 
     const token = await createAccesToken({ id: userFound._id });
     res.cookie('token', token);
+
     res.json({
       message: `Bienvenido ${userFound.nombre}, te has logeado exitosamente`,
-      id: userFound._id,
-      nombre: userFound.nombre,
-      correo: userFound.correo,
-      rol: userFound.rol,
-      createdAt: userFound.createdAt,
-      updatedAt: userFound.updatedAt,
+      user: {
+        id: userFound._id,
+        nombre: userFound.nombre,
+        correo: userFound.correo,
+        rol: userFound.rol, 
+      },
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-
-
 export const logout = async (req, res) => {
+  const { correo } = req.body; 
   try {
-    const userFound = await User.findById(req.user.id);
+    const userFound = await User.findOne({ correo });
     if (!userFound) return res.status(404).json({ message: 'Usuario no encontrado.' });
 
     res.cookie('token', "", {
-      expires: new Date(0) 
+      expires: new Date(0),
+      httpOnly: true, 
     });
 
     return res.json({ message: `Usuario "${userFound.nombre}" cerró sesión exitosamente` });
@@ -72,6 +79,7 @@ export const logout = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 export const profile = async (req, res) => {
   try {
