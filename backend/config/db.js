@@ -7,10 +7,10 @@ export const TOKENSECRET =  process.env.TOKENSECRET
 export const connectDB = async () => {
     try {
         const mongoURI = process.env.MONGO_URL;
+        
         if (!mongoURI) {
             throw new Error('MONGO_URL no está definido en el archivo .env');
         }
-        // Conectar a MongoDB (sin las opciones obsoletas)
         await mongoose.connect(mongoURI);
         console.log("Base de datos conectada.");
     } catch (error) {
