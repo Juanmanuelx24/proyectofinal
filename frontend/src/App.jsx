@@ -1,20 +1,27 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+//Rutas de inicio de sesion y registro
 import Login from './components/login';      
 import Register from './components/register'; 
-import Home from './pages/home';  // Nuevo componente Home
-import Header from './components/header';  // Barra de navegación
-import AdminDashboard from './pages/admin'; // Importa el componente admin
+// Componente que sera la pagina principal
+import Home from './pages/home';
+  // Barra de navegación
+import Header from './components/header';
+ // Importa el componente admin - pagina de la vista con rol admin
+import AdminDashboard from './pages/admin';
+import UserDashboard from './pages/user';
 
 function App() {
   return (
     <Router>
-      <Header /> {/* Barra de navegación global */}
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />  {/* Página de bienvenida */}
         <Route path="/login" element={<Login />} />  {/* Formulario de login */}
         <Route path="/register" element={<Register />} />  {/* Formulario de registro */}
         <Route path="/admin" element={<AdminDashboard />} />  {/* Ruta del dashboard de admin */}
+        <Route path="/user" element={<UserDashboard />} />
+
       </Routes>
     </Router>
   );

@@ -1,3 +1,4 @@
+//Inicio de sesion para usuario o Admin
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { usuarios } from '../data'; // Importamos el arreglo de usuarios
@@ -36,12 +37,12 @@ function Login() {
     if (usuario && usuario.password === contraseña) {
       // Guardar el rol del usuario en el localStorage para su uso posterior
       localStorage.setItem('userRole', usuario.rol);
-
+    
       // Redirigir según el rol
       if (usuario.rol === 'admin') {
         navigate('/admin'); // Redirige al dashboard de admin
-      } else {
-        navigate('/'); // Redirige al usuario normal a la página principal
+      } else if (usuario.rol === 'usuario') {
+        navigate('/user'); // Redirige al dashboard de usuario
       }
     } else {
       setError('Email o contraseña incorrectos.');

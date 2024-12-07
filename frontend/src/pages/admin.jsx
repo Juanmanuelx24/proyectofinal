@@ -34,7 +34,7 @@ function AdminDashboard() {
 
     const handleLogout = () => {
         localStorage.removeItem('adminLoggedIn');
-        navigate('/login');
+        navigate('/');
     };
 
     const handleDeleteSala = (id) => {

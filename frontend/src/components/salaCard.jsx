@@ -1,4 +1,5 @@
 // Este componente mostrará la información de cada sala (nombre, capacidad, estado y ubicación).
+// Se conceta con admin.jsx
 // src/components/salaCard.jsx
 import React, { useState } from 'react';
 

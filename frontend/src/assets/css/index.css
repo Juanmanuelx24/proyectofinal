@@ -7,12 +7,11 @@
 
 body {
   background-color: transparent;
-  height: 100dvh;
 }
 
 #root {
   background-color: #eee;
-  height: 100%;
+  padding-bottom: 5rem;
 }
 
 /* HEADER */
@@ -198,14 +197,6 @@ form button:hover {
 }
 
 /*PAGINA DEL ADMINISTRADOR*/
-/* Estilos generales para la página de Admin */
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  margin: 0;
-  padding: 0;
-  color: #333;
-}
 
 /* Contenedor principal */
 .container-admin {
@@ -232,12 +223,12 @@ body {
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
-  
+
   .usuarios-listados ul {
     list-style: none;
     padding: 0;
   }
-  
+
   .usuarios-listados li {
     padding: 10px;
     margin-bottom: 10px;
@@ -245,7 +236,7 @@ body {
     border-radius: 5px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
-  
+
   h3 {
     color: #333;
     font-size: 1.8rem;
@@ -393,40 +384,39 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-height: 300px;
     overflow-y: auto;
-}
+  }
 
-.usuarios-lista ul {
+  .usuarios-lista ul {
     list-style-type: none;
     padding: 0;
-}
+  }
 
-.usuarios-lista li {
+  .usuarios-lista li {
     padding: 8px;
     border-bottom: 1px solid #ddd;
     font-size: 16px;
     color: #333;
-}
+  }
 
-.usuarios-lista li:last-child {
+  .usuarios-lista li:last-child {
     border-bottom: none;
-}
+  }
 
-.usuarios-lista li:hover {
+  .usuarios-lista li:hover {
     background-color: #e0e0e0;
     cursor: pointer;
-}
+  }
 
-.buton-user-register {
-  background-color: #007bff;
-  margin: 10px 0;
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  font-size: 14px;
-
-}
+  .buton-user-register {
+    background-color: #007bff;
+    margin: 10px 0;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+  }
 
   /* Estilo responsive para dispositivos móviles */
   @media (max-width: 768px) {
@@ -448,5 +438,423 @@ body {
     .sala-form button {
       font-size: 0.9rem;
     }
+  }
+}
+
+/**---------PERFIL DE USER------------*/
+/* Estilos generales del contenedor .container-user */
+.container-user {
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: 2rem;
+  height: auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+
+
+  /* Estilos del título h2 dentro del contenedor */
+  h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #007bff;
+
+  }
+
+  /* Estilos del botón para mostrar/ocultar el perfil */
+  button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-size: 1rem;
+  }
+
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  /* Estilos del perfil del usuario (UserProfile) */
+  .profile-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+  }
+
+  .profile-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .profile-card p {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #555;
+  }
+
+  /* .profile-card-form{
+    max-width: 500px;
+  } */
+  .profile-card input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+
+  .profile-card input:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+  }
+
+  /* Estilos para los botones dentro del perfil */
+  .profile-card button {
+    padding: 8px 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 1rem;
+  }
+
+  .profile-card button:hover {
+    background-color: #218838;
+  }
+
+  /* Estilos de la lista de salas (RoomList) */
+  .room-list {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+  }
+
+  .room-list h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .room-list ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .room-list li {
+    background-color: #fafafa;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    line-height: 1.4em;
+  }
+
+  .room-list li h4 {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .room-list li p {
+    font-size: 1rem;
+    color: #555;
+  }
+
+  .container-reservas {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    margin-bottom: 3em;
+
+    .buttons-reserva {
+      display: flex;
+      flex-direction: row;
+      gap: 1.2em;
+    }
+
+    .reserva-form {
+      background-color: #fafafa; /* Fondo oscuro */
+      color: #fff; /* Texto blanco */
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 500px;
+      margin: 20px auto;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+      /* Títulos */
+      h3 {
+        font-size: 24px;
+        text-align: center;
+        color: #333;
+        /* Color neón para el título */
+        margin-bottom: 20px;
+      }
+
+      /* Mensajes de error y éxito */
+      p {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      p[style*="color: red"] {
+        color: #FF5733;
+        /* Rojo para errores */
+      }
+
+      p[style*="color: green"] {
+        color: #00FF9D;
+        /* Verde para éxito */
+      }
+
+      /* Campos de formulario */
+      label {
+        font-size: 16px;
+        margin-bottom: 10px;
+        display: block;
+        color: #333;
+      }
+
+      input[type="email"],
+      select,
+      input[type="datetime-local"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #999;
+        /* Bordes en verde neón */
+        border-radius: 5px;
+        background-color: #eee;
+        color: #333;
+        font-size: 16px;
+      }
+
+      input[type="email"]:focus,
+      select:focus,
+      input[type="datetime-local"]:focus {
+        outline: none;
+        border-color: #555;
+        /* Color de borde en neón al enfocar */
+      }
+
+      /* Botón */
+      button {
+        background-color: #007BFF;
+        /* Botón en verde neón */
+        color: #fafafa;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 18px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+        /* Verde más oscuro en hover */
+      }
+
+      button:focus {
+        outline: none;
+      }
+
+      /* Estilos responsive */
+      @media (max-width: 600px) {
+        .reserva-form {
+          padding: 15px;
+          margin: 15px;
+        }
+
+        h3 {
+          font-size: 20px;
+        }
+
+        button {
+          font-size: 16px;
+        }
+      }
+    }
+
+    .salas-reservadas {
+      background-color: #fafafa;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 800px;
+      margin: 20px auto;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  
+      h3 {
+          font-size: 24px;
+          color: #333; /* Título oscuro */
+          text-align: center;
+          margin-bottom: 20px;
+      }
+  
+      p {
+          text-align: center;
+          color: #555;
+          font-size: 16px;
+          margin-top: 10px;
+      }
+  
+      table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 20px;
+      }
+  
+      table thead {
+          background-color: #0056b3;
+          color: #fafafa;
+      }
+  
+      table thead th {
+          padding: 10px;
+          text-align: left;
+          font-size: 16px;
+      }
+  
+      table tbody tr {
+          border-bottom: 1px solid #ddd;
+      }
+  
+      table tbody tr:nth-child(even) {
+          background-color: #f9f9f9;
+      }
+  
+      table tbody td {
+          padding: 10px;
+          font-size: 14px;
+          color: #333;
+      }
+  
+      table tbody tr:hover {
+          background-color: #e6f7ff; /* Azul claro en hover */
+      }
+  
+      table tbody button {
+          color: #fafafa;
+          border: none;
+          border-radius: 4px;
+          padding: 5px 10px;
+          font-size: 14px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+          margin-right: 5px;
+      }
+      
+      table tbody button:first-child {
+      background-color: #00cc7a;
+      }
+
+      table tbody button:first-child:hover {
+          background-color: #4CAF50;
+      }
+
+      table tbody button:last-child {
+        background-color: #e63946;
+        }
+  
+        table tbody button:last-child:hover {
+            background-color: #c0392b;
+        }
+  
+      /* Estilos para el modal */
+      .modal {
+          background-color: rgba(0, 0, 0, 0.6); /* Fondo semitransparente */
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+      }
+  
+      .modal-content {
+          background-color: #fff;
+          padding: 20px;
+          border-radius: 8px;
+          width: 400px;
+          text-align: center;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+  
+      .modal-content p {
+          font-size: 18px;
+          color: #333;
+          margin-bottom: 20px;
+      }
+  
+      .modal-content button {
+          background-color: #007BFF;
+          color: #fafafa;
+          border: none;
+          border-radius: 4px;
+          padding: 10px 20px;
+          font-size: 16px;
+          cursor: pointer;
+          margin: 0 10px;
+          transition: background-color 0.3s ease;
+      }
+  
+      .modal-content button:hover {
+          background-color: #0056b3;
+      }
+  
+      @media (max-width: 600px) {
+          .salas-reservadas {
+              padding: 15px;
+              margin: 15px;
+          }
+  
+          table thead th,
+          table tbody td {
+              font-size: 14px;
+          }
+  
+          table tbody button {
+              font-size: 12px;
+          }
+      }
+
+  }
+  }
+  #logoutButtonUser {
+    background-color: #e74c3c;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 20px auto;
+  }
+
+  #logoutButtonUser:hover {
+    background-color: #c0392b;
   }
 }

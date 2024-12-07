@@ -24,7 +24,6 @@ export const salas = [
 ];
 
 export const reservas = [
-  { id: 1, salaId: 1, usuarioId: 1, fechaInicio: "2024-12-05 10:00", fechaFin: "2024-12-05 12:00", estado: "Activo" },
-  // más reservas
+  // { id: 1, salaId: 1, usuarioId: 1, fechaInicio: "2024-12-05 10:00", fechaFin: "2024-12-05 12:00", estado: "Activo" },
 ];
   
