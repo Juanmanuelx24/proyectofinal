@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import authRoutes from './routes/authRoutes.js';
 import cookieParser from 'cookie-parser';
 import SalaRoutes from './routes/salaRoutes.js';
-// import ReservaRoutes from './routes/reservaRoutes.js';
+import ReservaRoutes from './routes/reservaRoutes.js';
 
 
 const app = express();
@@ -13,6 +13,6 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 app.use('/api',authRoutes);
 app.use('/api', SalaRoutes)
-// app.use('/api', ReservaRoutes);
+app.use('/api', ReservaRoutes);
 
 export default app;

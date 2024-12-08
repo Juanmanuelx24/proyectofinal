@@ -24,11 +24,12 @@ export const register = async (req, res) => {
 
     res.status(201).json({
       message: `Usuario "${userSave.nombre}" creado exitosamente`,
+      token,
       user: {
         id: userSave._id,
         nombre: userSave.nombre,
         correo: userSave.correo,
-        rol: userSave.rol,  // Mostrar el rol del usuario
+        rol: userSave.rol,  
         createdAt: userSave.createdAt,
         updatedAt: userSave.updatedAt,
       },
@@ -52,6 +53,7 @@ export const login = async (req, res) => {
 
     res.json({
       message: `Bienvenido ${userFound.nombre}, te has logeado exitosamente`,
+      token,
       user: {
         id: userFound._id,
         nombre: userFound.nombre,
