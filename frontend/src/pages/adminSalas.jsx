@@ -2,8 +2,8 @@
 // AdminSalas.jsx
 import { useState, useEffect } from 'react';
 import { salas } from '../data';
-import SalaCard from '../components/SalaCard';
-import SalaForm from '../components/SalaForm';
+import SalaCard from '../components/salaCard';
+import SalaForm from '../components/salaForm';
 
 const AdminSalas = () => {
   const [salasData, setSalasData] = useState(salas);
