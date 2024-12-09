@@ -1,5 +1,5 @@
 // src/components/RoomList.jsx
-// Lista las salas disponibles
+// Lista las salas disponibles en user.jsx
 import React from 'react';
 import { salas } from '../data'; // Importa la lista de salas
 

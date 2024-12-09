@@ -1,5 +1,5 @@
 // src/components/reservaForm.jsx
-//Crear o editar reservas
+//Crear o editar reservas para user.jsx
 import React, { useState, useEffect } from 'react';
 import { salas, usuarios, reservas } from '../data';
 

@@ -1,9 +1,7 @@
 import User from '../models/Usuario.js';
 import { createAccesToken } from '../middleware/authMiddleware.js';
 
-
 const ROL_TOKEN= process.env.ROL_TOKEN
-
 
 export const register = async (req, res) => {
   const { nombre, correo, contraseña, rol } = req.body;

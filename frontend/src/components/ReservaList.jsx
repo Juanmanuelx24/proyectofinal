@@ -1,5 +1,5 @@
 // src/components/ReservaList.jsx
-// Lista las reservas realizadas y redirecciona a reservaFrom para editar una reserva
+// Lista las reservas realizadas en user.jsx y redirecciona a reservaFrom para editar una reserva
 import React, { useState } from 'react';
 import { reservas, salas, usuarios } from '../data';
 import Modal from './Modal';
