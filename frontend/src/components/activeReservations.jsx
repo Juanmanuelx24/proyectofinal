@@ -1,4 +1,6 @@
 // src/components/ActiveReservations.jsx
+//componente de Admin
+//Lista las reservas activas
 import React, { useState } from 'react';
 import ModalAdmin from './modalAdmin';
 

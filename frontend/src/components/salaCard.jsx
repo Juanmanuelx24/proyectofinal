@@ -1,3 +1,5 @@
+//Componente de admin
+//Lista las salas disponibles y permite editarlas
 import React, { useState } from 'react';
 
 function SalaCard({ sala, onDelete, onEdit, salas }) {

@@ -1,4 +1,4 @@
-//Modal para perfil de admin
+//Componente de admin - Modal para confirmar la cancelación de una reserva
 // src/components/modalAdmin.jsx
 import React from 'react';
 

@@ -1,4 +1,6 @@
 // src/components/UserRegistration.jsx
+//Componente de admin
+//  Lista de usuarios registrados
 import React, { useState } from 'react';
 
 function UserRegistration({ usuarios }) {
