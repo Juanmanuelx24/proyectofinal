@@ -1,4 +1,5 @@
 // src/components/Modal.jsx
+//Modal de confirmacion de eliminar una reserva para ReservaList.jsx
 import React from 'react';
 
 function Modal({ mensaje, onConfirm, onCancel }) {

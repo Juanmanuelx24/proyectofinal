@@ -2,33 +2,57 @@
 //Este formulario permitirá al administrador agregar nuevas salas.
 import React, { useState } from 'react';
 
-function SalaForm({ setSalas }) {
+function SalaForm({ setSalas, salas }) {
   const [nombre, setNombre] = useState('');
   const [capacidad, setCapacidad] = useState(100);
   const [estado, setEstado] = useState('Activo');
   const [ubicacion, setUbicacion] = useState('');
+  const [error, setError] = useState(''); // Para manejar mensajes de error
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!nombre || !ubicacion) {
-      alert('Por favor, complete todos los campos.');
+    // Validación de campos vacíos o con solo espacios en blanco
+    if (!nombre.trim() || !ubicacion.trim()) {
+      setError('Todos los campos son obligatorios y no pueden contener solo espacios en blanco.');
       return;
     }
 
+    // Validación de nombres duplicados
+    const nombreDuplicado = salas.some(
+      (sala) => sala.nombre.toLowerCase() === nombre.trim().toLowerCase()
+    );
+
+    if (nombreDuplicado) {
+      setError('El nombre de la sala ya existe. Por favor, elija otro nombre.');
+      return;
+    }
+
+    // Validación de capacidad (mayor que 0 y no mayor a 100)
+    if (capacidad <= 0 || capacidad > 100) {
+      setError('La capacidad debe ser un número mayor a 0 y menor o igual a 100.');
+      return;
+    }
+
+    // Crear nueva sala si todas las validaciones pasan
     const nuevaSala = {
       id: Date.now(), // Utiliza el timestamp como ID único
-      nombre,
+      nombre: nombre.trim(),
       capacidad,
       estado,
-      ubicacion,
+      ubicacion: ubicacion.trim(),
     };
 
     setSalas((prevSalas) => [...prevSalas, nuevaSala]);
+    handleCancel(); // Limpiar los datos del formulario después de guardar
+  };
+
+  const handleCancel = () => {
     setNombre('');
     setCapacidad(100);
     setEstado('Activo');
     setUbicacion('');
+    setError(''); // Limpia el mensaje de error
   };
 
   return (
@@ -68,10 +92,12 @@ function SalaForm({ setSalas }) {
         required
       />
 
+      {error && <p style={{ color: 'red', margin: '0.8em 0'}}>{error}</p>}
+
       <button type="submit">Crear Sala</button>
+      <button type="button" onClick={handleCancel}>Cancelar</button>
     </form>
   );
 }
 
 export default SalaForm;
-

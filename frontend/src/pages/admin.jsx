@@ -1,13 +1,12 @@
 // src/pages/admin.jsx
-/*la página de administración se estructura con las siguientes secciones:
-Un encabezado con el nombre de la página (Dashboard de Administrador).
-Un listado de salas disponibles.
-Un formulario para crear una nueva sala.
-Una lista de las reservas activas (simulada por un arreglo).*/
+//Dashboard de Administrador
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Para redirigir después de cerrar sesión
 import SalaCard from '../components/salaCard'; // Importa el componente SalaCard
 import SalaForm from '../components/salaForm'; // Importa el formulario SalaForm
+import ActiveReservations from '../components/activeReservations';
+import UserRegistration from '../components/userRegistration'; // Importar los usuarios registrados
 
 function AdminDashboard() {
     const [salas, setSalas] = useState([
@@ -28,8 +27,6 @@ function AdminDashboard() {
         { id: 3, nombre: 'Usuario 3', email: 'usuario3@example.com' },
     ]);
 
-    const [mostrarUsuarios, setMostrarUsuarios] = useState(false);
-
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -45,14 +42,6 @@ function AdminDashboard() {
         setSalas(salas.map((sala) => (sala.id === id ? { ...sala, ...updatedData } : sala)));
     };
 
-    const handleCancelReserva = (id) => {
-        setReservas(reservas.filter((reserva) => reserva.id !== id));
-    };
-
-    const toggleMostrarUsuarios = () => {
-        setMostrarUsuarios(!mostrarUsuarios);
-    };
-
     return (
         <div className="container-admin">
             <h2>Dashboard de Administrador</h2>
@@ -63,6 +52,7 @@ function AdminDashboard() {
                     <SalaCard
                         key={sala.id}
                         sala={sala}
+                        salas={salas} // Pasar todas las salas existentes
                         onDelete={() => handleDeleteSala(sala.id)}
                         onEdit={(updatedData) => handleEditSala(sala.id, updatedData)}
                     />
@@ -70,33 +60,15 @@ function AdminDashboard() {
             </div>
 
             <h3>Crear Nueva Sala</h3>
-            <SalaForm setSalas={setSalas} />
+            {/* Permite la creacion de nuevas salas, con validaciones de datos */}
+            <SalaForm setSalas={setSalas} salas={salas} />
 
-            <h3>Reservas Activas</h3>
-            <ul>
-                {reservas.map((reserva) => (
-                    <li key={reserva.id}>
-                        {reserva.usuario} - {reserva.sala} ({reserva.estado})
-                        <button onClick={() => handleCancelReserva(reserva.id)}>Cancelar</button>
-                    </li>
-                ))}
-            </ul>
+            {/* Manejamos la lógica de reservas y el modal de confirmación directamente en este componente.
+            Recibe las props reservas y setReservas para administrar la lista desde AdminDashboard. */}
+            <ActiveReservations reservas={reservas} setReservas={setReservas} />
 
-            <h3>Usuarios Registrados</h3>
-            <button className='buton-user-register' onClick={toggleMostrarUsuarios}>
-                {mostrarUsuarios ? 'Ocultar Usuarios Registrados' : 'Listar Usuarios Registrados'}
-            </button>
-            {mostrarUsuarios && (
-                <div className="usuarios-lista">
-                    <ul>
-                        {usuarios.map((usuario) => (
-                            <li key={usuario.id}>
-                                {usuario.nombre} - {usuario.email}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
+            {/* importamos la lista de usuarios registrados para simplificar admin.jsx */}
+            <UserRegistration usuarios={usuarios} />
 
             <button id="logoutButton" onClick={handleLogout}>Cerrar Sesión</button>
         </div>

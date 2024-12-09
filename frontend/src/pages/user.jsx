@@ -1,4 +1,5 @@
 // src/pages/user.jsx
+//Pagina principal de usuarios
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usuarios, reservas } from '../data'; // Asegúrate de importar 'reservas' también
