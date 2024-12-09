@@ -3,10 +3,10 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Para redirigir después de cerrar sesión
-import SalaCard from '../components/salaCard'; // Importa el componente SalaCard
-import SalaForm from '../components/salaForm'; // Importa el formulario SalaForm
-import ActiveReservations from '../components/activeReservations';
-import UserRegistration from '../components/userRegistration'; // Importar los usuarios registrados
+import SalaCard from '../components/admin/salaCard'; // Importa el componente SalaCard
+import SalaForm from '../components/admin/salaForm'; // Importa el formulario SalaForm
+import ActiveReservations from '../components/admin/activeReservations';
+import UserRegistration from '../components/admin/userRegistration'; // Importar los usuarios registrados
 
 function AdminDashboard() {
     const [salas, setSalas] = useState([

@@ -1,7 +1,7 @@
 // src/components/reservaForm.jsx
 //Crear o editar reservas para user.jsx
 import React, { useState, useEffect } from 'react';
-import { salas, usuarios, reservas } from '../data';
+import { salas, usuarios, reservas } from '../../data';
 
 function ReservaForm({ reservaEditar, onReservaActualizada, onReservaCreada, onCancelarEdicion }) {
     const [selectedSala, setSelectedSala] = useState('');

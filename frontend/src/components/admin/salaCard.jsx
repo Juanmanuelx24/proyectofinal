@@ -28,6 +28,15 @@ function SalaCard({ sala, onDelete, onEdit, salas }) {
             return false;
         }
 
+        // Validar que la capacidad sea un número entre 1 y 100
+        const capacidad = parseInt(editedData.capacidad, 10);
+        if (isNaN(capacidad) || capacidad <= 0 || capacidad > 100) {
+            setError('La capacidad debe ser un número mayor a 0 y menor o igual a 100.');
+            return false;
+        }
+
+        // Validar que el nombre no sea duplicado
+
         const nombreDuplicado = salas.some(
             (otraSala) => otraSala.nombre.toLowerCase() === editedData.nombre.toLowerCase() && otraSala.id !== sala.id
         );
@@ -89,7 +98,7 @@ function SalaCard({ sala, onDelete, onEdit, salas }) {
                         value={editedData.ubicacion}
                         onChange={handleInputChange}
                     />
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                    {error && <p style={{ color: 'red', margin: '0.8em 0'}}>{error}</p>}
                     <button onClick={handleSave}>Guardar</button>
                     <button onClick={handleCancel}>Cancelar</button>
                 </div>
