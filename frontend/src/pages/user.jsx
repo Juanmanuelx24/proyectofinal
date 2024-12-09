@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usuarios, reservas } from '../data'; // Asegúrate de importar 'reservas' también
-import UserProfile from '../components/UserProfile';
-import RoomList from '../components/RoomList';
-import ReservaList from '../components/ReservaList';
-import ReservaForm from '../components/reservaForm';
+import UserProfile from '../components/client/UserProfile';
+import RoomList from '../components/client/RoomList';
+import ReservaList from '../components/client/ReservaList';
+import ReservaForm from '../components/client/reservaForm';
 
 function UserDashboard() {
     const userId = 2; // Cambiar por la lógica de autenticación real

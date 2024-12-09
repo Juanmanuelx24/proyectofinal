@@ -1,4 +1,5 @@
 // src/components/salaForm.jsx
+//Componente de admin
 //Este formulario permitirá al administrador agregar nuevas salas.
 import React, { useState } from 'react';
 
