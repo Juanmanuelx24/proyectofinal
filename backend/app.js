@@ -4,26 +4,25 @@ import authRoutes from './routes/authRoutes.js';
 import cookieParser from 'cookie-parser';
 import SalaRoutes from './routes/salaRoutes.js';
 import ReservaRoutes from './routes/reservaRoutes.js';
-import cors from 'cors'; // Importar CORS
-import dotenv from 'dotenv'; // Asegúrate de usar dotenv si necesitas variables de entorno
+import cors from 'cors'; 
+import dotenv from 'dotenv'; 
 
 dotenv.config();
 
 const app = express();
 
-// Configuración de CORS
 const corsOptions = {
-  origin: process.env.FRONEND_URL, // URL del frontend
-  credentials: true,              // Permitir cookies en las solicitudes
+  origin: process.env.FRONTEND_URL, 
+  credentials: true,              
 };
-app.use(cors(corsOptions)); // Usar el middleware de CORS
+app.use(cors(corsOptions)); 
 
-// Middlewares
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan('dev'));
 
-// Rutas
+
 app.use('/api', authRoutes);
 app.use('/api', SalaRoutes);
 app.use('/api', ReservaRoutes);

@@ -39,7 +39,6 @@ export const authRequired = (req, res, next) => {
     if (!token) {
       return res.status(403).json({ message: 'Acceso denegado. No se encontró token.' });
     }
-  
     try {
     
       const decoded = jwt.verify(token, process.env.TOKENSECRET);

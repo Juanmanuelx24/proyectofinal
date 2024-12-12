@@ -64,21 +64,16 @@ export const login = async (req, res) => {
   }
 };
 export const logout = async (req, res) => {
-  const { correo } = req.body; 
   try {
-    const userFound = await User.findOne({ correo });
-    if (!userFound) return res.status(404).json({ message: 'Usuario no encontrado.' });
+    const { nombre } = req.user;
+    res.clearCookie('token', { httpOnly: true });
 
-    res.cookie('token', "", {
-      expires: new Date(0),
-      httpOnly: true, 
-    });
-
-    return res.json({ message: `Usuario "${userFound.nombre}" cerró sesión exitosamente` });
+    return res.json({ message: `Usuario "${nombre}" cerró sesión exitosamente` });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
+
 
 
 export const profile = async (req, res) => {

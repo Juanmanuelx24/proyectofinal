@@ -1,14 +1,27 @@
-import { useState, useEffect } from 'react';
-import Navbar from '../components/client/NavbarUser';
-import client from '../api/client.js';
-import { FaTrash, FaEdit } from 'react-icons/fa';
-import Swal from 'sweetalert2';
+import Reserva from '../models/Reserva.js';
+import Sala from '../models/sala.js';
+import Usuario from '../models/Usuario.js';
+
+// Función para verificar si hay solapamientos de reserva
+const checkOverlap = async (salaId, fechaInicio, fechaFin) => {
+  const overlappingReservations = await Reserva.find({
+    salaId,
+    $or: [
+      {
+        fechaInicio: { $lt: fechaFin }, // Si la nueva reserva empieza antes de que termine la existente
+        fechaFin: { $gt: fechaInicio }, // Y si la nueva reserva termina después de que empiece la existente
+      },
+    ],
+  });
+
+  return overlappingReservations.length === 0;
+};
 
 export const getReservas = async (req, res) => {
   try {
     const reservas = await Reserva.find()
-      .populate('salaId', 'nombre capacidad ubicacion') 
-      .populate('usuarioId', 'nombre correo'); 
+      .populate('salaId', 'nombre capacidad ubicacion')
+      .populate('usuarioId', 'nombre correo');
     res.json(reservas);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -24,6 +37,12 @@ export const createReserva = async (req, res) => {
 
     const usuario = await Usuario.findById(usuarioId);
     if (!usuario) return res.status(404).json({ message: 'Usuario no encontrado.' });
+
+    // Validar si la sala está disponible en las fechas solicitadas
+    const isAvailable = await checkOverlap(salaId, fechaInicio, fechaFin);
+    if (!isAvailable) {
+      return res.status(400).json({ message: 'La sala ya está reservada para ese horario.' });
+    }
 
     const nuevaReserva = new Reserva({
       salaId,
@@ -51,7 +70,8 @@ export const updateReserva = async (req, res) => {
       id,
       { fechaInicio, fechaFin, estado },
       { new: true }
-    ).populate('salaId', 'nombre').populate('usuarioId', 'nombre correo');
+    ).populate('salaId', 'nombre')
+     .populate('usuarioId', 'nombre correo');
 
     if (!reservaActualizada) {
       return res.status(404).json({ message: 'Reserva no encontrada.' });

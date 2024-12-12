@@ -4,6 +4,7 @@ dotenv.config();
 
 
 export const TOKENSECRET =  process.env.TOKENSECRET
+
 export const connectDB = async () => {
     try {
         const mongoURI = process.env.MONGO_URL;

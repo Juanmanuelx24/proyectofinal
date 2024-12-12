@@ -26,4 +26,5 @@ const salaSchema = new mongoose.Schema({
   timestamps: true, 
 });
 const Sala = mongoose.model('Sala', salaSchema);
+
 export default Sala;
