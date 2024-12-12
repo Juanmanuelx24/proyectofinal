@@ -1,6 +1,8 @@
-import Reserva from '../models/Reserva.js';
-import Sala from '../models/sala.js';
-import Usuario from '../models/Usuario.js';
+import { useState, useEffect } from 'react';
+import Navbar from '../components/client/NavbarUser';
+import client from '../api/client.js';
+import { FaTrash, FaEdit } from 'react-icons/fa';
+import Swal from 'sweetalert2';
 
 export const getReservas = async (req, res) => {
   try {
