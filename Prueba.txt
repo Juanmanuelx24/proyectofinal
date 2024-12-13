@@ -4,433 +4,90 @@
     "contraseña": "admin",
     "rol":"CONTRASEÑA-ADMINISTRADOR"
 }
-admin-button - > crear sala
-edit-button -> editar boton
-cancel-button -> cancelar
-
-
-
-
-
-
-import Reserva from '../models/Reserva.js';
-import Sala from '../models/sala.js';
-import Usuario from '../models/Usuario.js';
-
-// Función para verificar si hay solapamientos de reserva
-const checkOverlap = async (salaId, fechaInicio, fechaFin) => {
-  const overlappingReservations = await Reserva.find({
-    salaId,
-    $or: [
-      {
-        fechaInicio: { $lt: fechaFin }, // Si la nueva reserva empieza antes de que termine la existente
-        fechaFin: { $gt: fechaInicio }, // Y si la nueva reserva termina después de que empiece la existente
-      },
-    ],
-  });
-
-  return overlappingReservations.length === 0;
-};
-
-export const getReservas = async (req, res) => {
-  try {
-    const reservas = await Reserva.find()
-      .populate('salaId', 'nombre capacidad ubicacion')
-      .populate('usuarioId', 'nombre correo');
-    res.json(reservas);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const createReserva = async (req, res) => {
-  const { salaId, usuarioId, fechaInicio, fechaFin } = req.body;
-
-  try {
-    const sala = await Sala.findById(salaId);
-    if (!sala) return res.status(404).json({ message: 'Sala no encontrada.' });
-
-    const usuario = await Usuario.findById(usuarioId);
-    if (!usuario) return res.status(404).json({ message: 'Usuario no encontrado.' });
-
-    // Validar si la sala está disponible en las fechas solicitadas
-    const isAvailable = await checkOverlap(salaId, fechaInicio, fechaFin);
-    if (!isAvailable) {
-      return res.status(400).json({ message: 'La sala ya está reservada para ese horario.' });
-    }
-
-    const nuevaReserva = new Reserva({
-      salaId,
-      usuarioId,
-      fechaInicio,
-      fechaFin,
-    });
-
-    await nuevaReserva.save();
-    res.status(201).json({
-      message: 'Reserva creada exitosamente.',
-      reserva: nuevaReserva,
-    });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
-export const updateReserva = async (req, res) => {
-  const { id } = req.params;
-  const { fechaInicio, fechaFin, estado } = req.body;
-
-  try {
-    const reservaActualizada = await Reserva.findByIdAndUpdate(
-      id,
-      { fechaInicio, fechaFin, estado },
-      { new: true }
-    ).populate('salaId', 'nombre')
-     .populate('usuarioId', 'nombre correo');
-
-    if (!reservaActualizada) {
-      return res.status(404).json({ message: 'Reserva no encontrada.' });
-    }
-
-    res.json({
-      message: 'Reserva actualizada exitosamente.',
-      reserva: reservaActualizada,
-    });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
-export const deleteReserva = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const reservaEliminada = await Reserva.findByIdAndDelete(id);
-    if (!reservaEliminada) {
-      return res.status(404).json({ message: 'Reserva no encontrada.' });
-    }
-
-    res.json({
-      message: 'Reserva eliminada exitosamente.',
-      reserva: reservaEliminada,
-    });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
 
 
 
 
 import { useState, useEffect } from 'react';
-import Navbar from '../components/client/NavbarUser';
-import client from '../api/client.js';
-import { FaTrash, FaEdit } from 'react-icons/fa';
-import Swal from 'sweetalert2';
+import client from '../api/client';  
+import { FaUsers, FaMapMarkerAlt, FaRegDotCircle } from 'react-icons/fa'; 
 
-function DashboardUser() {
-  const [user, setUser] = useState({
-    nombre: '',
-    correo: '',
-    contraseña: '',
-    usuarioId: '', // Agregamos el campo usuarioId
-  });
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [reservas, setReservas] = useState([]);
+function Salas() {
   const [salas, setSalas] = useState([]);
-  const [formData, setFormData] = useState({
-    salaId: '',
-    fechaInicio: '',
-    fechaFin: '',
-    usuarioId: '', // Añadimos usuarioId aquí
-  });
-  const [editing, setEditing] = useState(false);
-  const [editReservaId, setEditReservaId] = useState(null);
-
-  // Función para obtener el ID del usuario logeado
-  const fetchUserData = async () => {
-    setLoading(true);
-    try {
-      const response = await client.get('/profile');
-      setUser({
-        nombre: response.data.user.nombre || 'No disponible',
-        correo: response.data.user.correo || 'No disponible',
-        contraseña: '********',
-        usuarioId: response.data.user.id, 
-      });
-      
-    } catch (err) {
-      setError('Error al obtener los datos del usuario', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Función para obtener las reservas
-  const fetchReservas = async () => {
-    try {
-      const response = await client.get('/reservas');
-      setReservas(response.data);
-    } catch (err) {
-      setError('Error al obtener las reservas', err);
-    }
-  };
+  const [reservas, setReservas] = useState([]); 
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    fetchUserData();
-    fetchReservas(); // Llamada a fetchReservas aquí
-    fetchSalas();
-  }, []);
-
-  const fetchSalas = async () => {
-    try {
-      const response = await client.get('/sala');
-      setSalas(response.data);
-    } catch (err) {
-      setError('Error al obtener las salas disponibles', err);
-    }
-  };
-
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.salaId || !formData.fechaInicio || !formData.fechaFin) {
-      Swal.fire({
-        title: 'Error',
-        text: 'Por favor, completa todos los campos.',
-        icon: 'error',
-        timer: 1000,
-        timerProgressBar: true,
-      });
-      return;
-    }
-  
-    if (!user.usuarioId) {
-      Swal.fire({
-        title: 'Error',
-        text: 'Usuario no identificado. Por favor, inicia sesión nuevamente.',
-        icon: 'error',
-        timer: 1000,
-        timerProgressBar: true,
-      });
-      return;
-    }
-  
-    try {
-      const reservaData = { ...formData, usuarioId: user.usuarioId };
-      if (editing) {
-        await client.put(`/reservas/${editReservaId}`, reservaData);
-        Swal.fire({
-          title: '¡Éxito!',
-          text: 'Reserva actualizada correctamente.',
-          icon: 'success',
-          timer: 1000,
-          timerProgressBar: true,
-        });
-      } else {
-        await client.post('/reservas', reservaData);
-        Swal.fire({
-          title: '¡Éxito!',
-          text: 'Reserva creada correctamente.',
-          icon: 'success',
-          timer: 1000,
-          timerProgressBar: true,
-        });
-      }
-      setFormData({
-        salaId: '',
-        fechaInicio: '',
-        fechaFin: '',
-      });
-      setEditing(false);
-      setEditReservaId(null);
-      fetchReservas();
-    } catch (err) {
-      Swal.fire({
-        title: 'Error',
-        text: 'Error al guardar la reserva',
-        icon: 'error',
-        timer: 1000,
-        timerProgressBar: true,
-      },err);
-    }
-  };
-  
-
-  const handleEdit = (reservaId) => {
-    const reserva = reservas.find((r) => r._id === reservaId); // Cambio aquí
-    if (reserva) {
-      setFormData({
-        salaId: reserva.salaId._id,
-        fechaInicio: new Date(reserva.fechaInicio).toISOString().slice(0, 16),
-        fechaFin: new Date(reserva.fechaFin).toISOString().slice(0, 16),
-        usuarioId: reserva.usuarioId, // Añadimos usuarioId al editar
-      });
-      setEditing(true);
-      setEditReservaId(reservaId);
-    }
-  };
-
-  const handleDelete = async (reservaId) => {
-    const result = await Swal.fire({
-      title: '¿Deseas eliminar esta reserva?',
-      text: 'Esta acción no se puede deshacer.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
-    });
-  
-    if (result.isConfirmed) {
+    const fetchData = async () => {
       try {
-        await client.delete(`/reservas/${reservaId}`);
-        setReservas(reservas.filter((reserva) => reserva._id !== reservaId));
-        Swal.fire({
-          title: '¡Eliminado!',
-          text: 'La reserva ha sido eliminada.',
-          icon: 'success',
-          timer: 1000,
-          timerProgressBar: true,
-        });
+        // Obtener las salas
+        const salasResponse = await client.get('/sala');
+        setSalas(salasResponse.data);  
+
+        // Obtener las reservas con el populate realizado en el backend
+        const reservasResponse = await client.get('/reservas');
+        setReservas(reservasResponse.data);  
       } catch (err) {
-        Swal.fire({
-          title: 'Error',
-          text: 'No se pudo eliminar la reserva.',
-          icon: 'error',
-          timer: 1000,
-          timerProgressBar: true,
-        },err);
+        console.error("Error al obtener los datos: ", err);
+        setError('No se pudieron obtener las salas o reservas');
       }
+    };
+
+    fetchData();  
+  }, []); 
+
+  const getReservaInfo = (salaId) => {
+    const reserva = reservas.find(reserva => reserva.salaId._id === salaId && reserva.estado === 'Activo');
+    
+    if (reserva && reserva.usuarioId) {
+      return reserva.usuarioId.nombre || 'Usuario desconocido'; 
     }
+    return null;  
   };
-
-  const handleCancel = () => {
-    setFormData({
-      salaId: '',
-      fechaInicio: '',
-      fechaFin: '',
-    });
-    setEditing(false);
-    setEditReservaId(null);
-  };
-
-  if (loading) {
-    return <p>Cargando datos del usuario...</p>;
-  }
-
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
 
   return (
-    <div>
-      <Navbar />
-      <div style={{ padding: '20px' }}>
-        <h1 className='titulo-admin'>Bienvenido {user.nombre}</h1>
-        <div className='admin-card-profile'>
-          <h2>Perfil del Usuario</h2>
-          <p><strong>Nombre:</strong> {user.nombre}</p>
-          <p><strong>Correo Electrónico:</strong> {user.correo}</p>
-          <p><strong>Contraseña:</strong> {user.contraseña}</p>
-          
-        </div>
+    <div className="salas-container">
+      <h2>¡Salas Disponibles!</h2>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
 
-        <div className='container-profile'>
-          <h2>{editing ? 'Editar Reserva' : 'Crear Nueva Reserva'}</h2>
-          <form onSubmit={handleFormSubmit}>
-            <select
-              name="salaId"
-              value={formData.salaId}
-              onChange={handleInputChange}
-              className="admin-input"
-              disabled={editing} // Deshabilitamos la selección de sala al editar
-            >
-              <option value="">Selecciona una sala</option>
-              {salas.map((sala) => (
-                <option key={sala._id} value={sala._id}>
-                  {sala.nombre} ({sala.capacidad} personas)
-                </option>
-              ))}
-            </select>
-            <input
-              type="datetime-local"
-              name="fechaInicio"
-              value={formData.fechaInicio}
-              onChange={handleInputChange}
-              className="admin-input"
-            />
-            <input
-              type="datetime-local"
-              name="fechaFin"
-              value={formData.fechaFin}
-              onChange={handleInputChange}
-              className="admin-input"
-            />
-            <div>
-              <button type="submit" className="admin-button">
-                {editing ? 'Actualizar Reserva' : 'Crear Reserva'}
-              </button>
-              {editing && (
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  className="cancel-button"
-                >
-                  Cancelar
-                </button>
-              )}
-            </div>
-          </form>
-        </div>
+      <div className="salas-list" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+        {salas.length > 0 ? (
+          salas.map(sala => {
+            const nombreReservado = getReservaInfo(sala._id || sala.id); // Verificar si la sala está reservada
 
-        <div>
-          <h2>Mis Reservas</h2>
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Sala</th>
-                <th>Fecha Inicio</th>
-                <th>Fecha Fin</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reservas.map((reserva) => (
-                <tr key={reserva._id}>
-                  <td>{reserva.salaId?.nombre || 'Desconocido'}</td>
-                  <td>{new Date(reserva.fechaInicio).toLocaleString()}</td>
-                  <td>{new Date(reserva.fechaFin).toLocaleString()}</td>
-                  <td>
-                    <button
-                      onClick={() => handleEdit(reserva._id)}
-                      className="edit-icon"
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(reserva._id)}
-                      className="delete-icon"
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            return (
+              <div 
+                className="sala-card" 
+                key={`${sala._id || sala.nombre}-${sala.ubicacion}`}  // Usar un valor único como 'id' o 'nombre'
+                style={{ 
+                  padding: '15px', 
+                  border: '1px solid #ccc', 
+                  borderRadius: '10px', 
+                  width: 'calc(33% - 20px)', 
+                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                }}
+              >
+                <h3>{sala.nombre}</h3>
+                <div className="sala-info" style={{ marginTop: '10px' }}>
+                  <p><FaUsers /> <strong>Capacidad:</strong> {sala.capacidad}</p>
+                  <p><FaRegDotCircle /> <strong>Estado:</strong> {sala.estado}</p>
+                  <p><FaMapMarkerAlt /> <strong>Ubicación:</strong> {sala.ubicacion}</p>
+                  {/* Mostrar mensaje si está reservada */}
+                  {nombreReservado ? (
+                    <p style={{ color: 'red' }}><strong>Reservada por:</strong> {nombreReservado}</p>
+                  ) : (
+                    <p style={{ color: 'green' }}><strong>Disponible</strong></p>
+                  )}
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <p>No hay salas disponibles</p>
+        )}
       </div>
     </div>
   );
 }
 
-export default DashboardUser;
+export default Salas;

@@ -112,7 +112,7 @@ function Register() {
           <div className="input-register">
             <label>Rol:</label>
             <div className="input-register-field">
-              <FaRegUserCircle /> {/* Ícono para el campo de Rol */}
+              <FaRegUserCircle /> 
               <select
                 name="rol"
                 value={form.rol}

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Navbar from '../components/admin/NavbarAdmin';
 import client from '../api/client.js'; 
 import { FaTrash, FaEdit } from 'react-icons/fa'; 
-import Swal from 'sweetalert2'; // Importando SweetAlert2
+import Swal from 'sweetalert2'; 
 
 function DashboardAdmin() {
   const [admin, setAdmin] = useState({
@@ -19,7 +19,7 @@ function DashboardAdmin() {
     capacidad: 1,
     estado: 'Activo',
     ubicacion: '',
-  }); // Estado para los campos del formulario de nueva sala
+  }); 
   const [editingSala, setEditingSala] = useState(null); // Estado para editar sala
   const [filter, setFilter] = useState('Todas');
 
@@ -117,6 +117,20 @@ function DashboardAdmin() {
     }
   };
   const handleDeleteSala = async (id) => {
+    // Verificar si la sala tiene reservas activas
+    const reservasActivas = reservas.some((reserva) => reserva.salaId === id && reserva.estado === 'Activa');
+    
+    if (reservasActivas) {
+      // Mostrar alerta indicando que la sala está reservada y no se puede eliminar
+      Swal.fire({
+        icon: 'warning',
+        title: 'Sala en uso',
+        text: 'La sala está siendo reservada y no puede ser eliminada.',
+      });
+      return; // No continuar con la eliminación
+    }
+  
+    // Si no hay reservas activas, proceder con la alerta de confirmación
     const result = await Swal.fire({
       title: '¿Estás seguro?',
       text: 'No podrás recuperar esta sala después de eliminarla.',
@@ -147,9 +161,6 @@ function DashboardAdmin() {
     }
   };
   
-
-  
-
   const handleEditSala = (sala) => {
     setEditingSala(sala); // Establecer la sala que estamos editando
     setNewSala({

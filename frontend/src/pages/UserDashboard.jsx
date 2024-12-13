@@ -9,7 +9,7 @@ function DashboardUser() {
     nombre: '',
     correo: '',
     contraseña: '',
-    usuarioId: '', // Agregamos el campo usuarioId
+    usuarioId: '', 
   });
 
   const [loading, setLoading] = useState(true);
@@ -129,14 +129,14 @@ function DashboardUser() {
       setEditing(false);
       setEditReservaId(null);
       fetchReservas();
-    } catch (err) {
+    } catch {
       Swal.fire({
         title: 'Error',
-        text: 'Error al guardar la reserva',
+        text: 'Error, esta sala está reservada a esta hora.',
         icon: 'error',
         timer: 1000,
         timerProgressBar: true,
-      },err);
+      });
     }
   };
   
@@ -176,14 +176,14 @@ function DashboardUser() {
           timer: 1000,
           timerProgressBar: true,
         });
-      } catch (err) {
+      } catch {
         Swal.fire({
           title: 'Error',
           text: 'No se pudo eliminar la reserva.',
           icon: 'error',
           timer: 1000,
           timerProgressBar: true,
-        },err);
+        });
       }
     }
   };

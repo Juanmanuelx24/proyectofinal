@@ -1,40 +1,48 @@
 import { useState, useEffect } from 'react';
 import client from '../api/client';  
-import { FaUsers, FaMapMarkerAlt, FaRegDotCircle } from 'react-icons/fa';  // Importar iconos
+import { FaUsers, FaMapMarkerAlt, FaRegDotCircle } from 'react-icons/fa'; 
 
 function Salas() {
   const [salas, setSalas] = useState([]);
-  const [reservas, setReservas] = useState([]); // Para almacenar las reservas
+  const [reservas, setReservas] = useState([]); 
   const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Obtener las salas
         const salasResponse = await client.get('/sala');
-        setSalas(salasResponse.data);  
+        console.log('Salas:', salasResponse.data); // Verifica las salas
+        setSalas(salasResponse.data);
 
-        // Obtener las reservas con el populate realizado en el backend
         const reservasResponse = await client.get('/reservas');
-        setReservas(reservasResponse.data);  
+        console.log('Reservas:', reservasResponse.data); // Verifica las reservas
+        setReservas(reservasResponse.data);
       } catch (err) {
         console.error("Error al obtener los datos: ", err);
         setError('No se pudieron obtener las salas o reservas');
       }
     };
 
-    fetchData();  
-  }, []); 
+    fetchData();
+  }, []);
 
-  // Función para verificar si una sala está reservada y obtener el nombre de quien la reservó
+  // Función para obtener el nombre del usuario que reservó la sala
   const getReservaInfo = (salaId) => {
-    const reserva = reservas.find(reserva => reserva.salaId._id === salaId && reserva.estado === 'Activo');
-    
+    const reserva = reservas.find(reserva => {
+      console.log(reserva); // Verifica la estructura de la reserva
+      return reserva.salaId && reserva.salaId._id === salaId && reserva.estado === 'Activo';
+    });
+  
     if (reserva && reserva.usuarioId) {
-      // Accede directamente al nombre del usuario
-      return reserva.usuarioId.nombre || 'Usuario desconocido'; 
+      console.log(reserva.usuarioId); // Verifica que contiene los datos del usuario
+      return reserva.usuarioId.nombre || 'Usuario desconocido';
     }
-    return null; // Si no está reservada, devuelve null
+    return null;
+  };
+
+  // Función para verificar si la sala está activa o inactiva
+  const getSalaEstado = (estado) => {
+    return estado === 'Activo' ? 'Sala Activa' : 'Sala Inactiva';
   };
 
   return (
@@ -42,7 +50,6 @@ function Salas() {
       <h2>¡Salas Disponibles!</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      {/* Aquí se muestran las salas con formato de tarjetas */}
       <div className="salas-list" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
         {salas.length > 0 ? (
           salas.map(sala => {
@@ -63,7 +70,7 @@ function Salas() {
                 <h3>{sala.nombre}</h3>
                 <div className="sala-info" style={{ marginTop: '10px' }}>
                   <p><FaUsers /> <strong>Capacidad:</strong> {sala.capacidad}</p>
-                  <p><FaRegDotCircle /> <strong>Estado:</strong> {sala.estado}</p>
+                  <p><FaRegDotCircle /> <strong>Estado: </strong> {getSalaEstado(sala.estado)}</p>
                   <p><FaMapMarkerAlt /> <strong>Ubicación:</strong> {sala.ubicacion}</p>
                   {/* Mostrar mensaje si está reservada */}
                   {nombreReservado ? (
